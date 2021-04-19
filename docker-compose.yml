@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    network_mode: host
+    restart: always
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+  pgadmin:
+    image: dpage/pgadmin4
+    network_mode: host
+    restart: always
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    volumes:
+      - ${PWD}/servers.json:/pgadmin4/servers.json
+    depends_on:
+      db:
+        condition: service_healthy
+  app:
+    build: .
+    container_name: app
+    network_mode: host
+    depends_on:
+      db:
+        condition: service_healthy

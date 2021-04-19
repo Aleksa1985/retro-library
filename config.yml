@@ -1,0 +1,18 @@
+logging:
+  level: INFO
+  loggers:
+    org.lexsoft: DEBUG
+
+database:
+  driverClass: org.postgresql.Driver
+  user: postgres
+  password: user
+  url: jdbc:postgresql://localhost:5432/postgres
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 9000
+  adminConnectors:
+    - type: http
+      port: 9001
